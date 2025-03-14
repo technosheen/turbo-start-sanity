@@ -18,14 +18,14 @@ const fontGeist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
   weight: ["400", "500", "600", "700"],
-  display: "swap",
+  display: "optional",
 });
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   weight: ["400", "700"],
-  display: "swap",
+  display: "optional",
 });
 
 export default async function RootLayout({

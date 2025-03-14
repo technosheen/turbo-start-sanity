@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     ppr: true,
-    // inlineCss: true,
+    inlineCss: true,
   },
   logging: {
     fetches: {},
@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+        pathname: `/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/**`,
       },
     ],
   },
