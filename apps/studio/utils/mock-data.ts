@@ -424,11 +424,7 @@ export function generateMockBlogPages({
   });
 }
 
-type Blog = ReturnType<typeof generateMockBlogPages>[number];
-
-export function generateBlogIndexPage(blogs: Blog[]) {
-  const featuredBlog = faker.helpers.arrayElement(blogs);
-
+export function generateBlogIndexPage() {
   return {
     _id: "blogIndex" as const,
     _type: "blogIndex" as const,
@@ -439,16 +435,7 @@ export function generateBlogIndexPage(blogs: Blog[]) {
       type: "slug",
       current: "/blog",
     },
-    ...(featuredBlog?._id
-      ? {
-          featured: [
-            {
-              _type: "reference",
-              _key: faker.string.uuid(),
-              _ref: featuredBlog._id,
-            },
-          ],
-        }
-      : {}),
+    displayFeaturedBlogs: "yes",
+    featuredBlogsCount: "1",
   };
 }
