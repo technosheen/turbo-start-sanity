@@ -42,24 +42,37 @@ export const blogIndex = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "featured",
-      title: "Featured Blogs",
+      name: "displayFeaturedBlogs",
+      title: "Display Featured Blogs",
       description:
-        "Choose one special blog post to highlight at the top of your blog page. This post will be displayed in a larger size to catch visitors' attention.",
-      type: "array",
-      of: [
-        defineArrayMember({
-          type: "reference",
-          to: [
-            {
-              type: "blog",
-              options: { disableNew: true },
-            },
-          ],
-          validation: (rule) => [rule.required()],
-        }),
-      ],
-      validation: (rule) => [rule.max(1), rule.unique()],
+        "When enabled, this will take the top blogs from the ordered blog list and display them as featured at the top of the page",
+      type: "string",
+      options: {
+        list: [
+          { title: "Yes", value: "yes" },
+          { title: "No", value: "no" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "yes",
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "featuredBlogsCount",
+      title: "Number of Featured Blogs",
+      description: "Select the number of blogs to display as featured.",
+      type: "string",
+      options: {
+        list: [
+          { title: "1", value: "1" },
+          { title: "2", value: "2" },
+          { title: "3", value: "3" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "1",
+      hidden: ({ parent }) => parent?.displayFeaturedBlogs !== "yes",
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
