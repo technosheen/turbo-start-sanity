@@ -5,30 +5,37 @@ import { PageBuilder } from "@/components/pagebuilder";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogIndexPageData } from "@/lib/sanity/query";
 import { getMetaData } from "@/lib/seo";
+import { handleErrors } from "@/utils";
 
-/**
- * Fetches blog posts data from Sanity CMS
- */
 async function fetchBlogPosts() {
-  return await sanityFetch({ query: queryBlogIndexPageData });
+  return await handleErrors(sanityFetch({ query: queryBlogIndexPageData }));
 }
 
 export async function generateMetadata() {
-  try {
-    const { data } = await fetchBlogPosts();
-    return getMetaData(data ?? {});
-  } catch {
-    return getMetaData({});
-  }
+  const [result, err] = await fetchBlogPosts();
+  if (err || !result?.data) return getMetaData({});
+  return getMetaData(result.data);
 }
 
 export default async function BlogIndexPage() {
-  const { data } = await fetchBlogPosts();
-  if (!data) notFound();
+  const [res, err] = await fetchBlogPosts();
+  if (err || !res?.data) notFound();
 
-  const { blogs = [], title, description, pageBuilder = [], _id, _type } = data;
+  const {
+    blogs = [],
+    title,
+    description,
+    pageBuilder = [],
+    _id,
+    _type,
+    displayFeaturedBlogs,
+    featuredBlogsCount,
+  } = res.data;
 
-  // Handle empty blogs case
+  const validFeaturedBlogsCount = featuredBlogsCount
+    ? Number.parseInt(featuredBlogsCount)
+    : 0;
+
   if (!blogs.length) {
     return (
       <main className="container my-16 mx-auto px-4 md:px-6">
@@ -45,24 +52,31 @@ export default async function BlogIndexPage() {
     );
   }
 
-  // Extract featured blog and remaining blogs
-  const [featuredBlog, ...remainingBlogs] = blogs;
+  const shouldDisplayFeaturedBlogs =
+    displayFeaturedBlogs && validFeaturedBlogsCount > 0;
+
+  const featuredBlogs = shouldDisplayFeaturedBlogs
+    ? blogs.slice(0, validFeaturedBlogsCount)
+    : [];
+  const remainingBlogs = shouldDisplayFeaturedBlogs
+    ? blogs.slice(validFeaturedBlogsCount)
+    : blogs;
 
   return (
     <main className="bg-background">
       <div className="container my-16 mx-auto px-4 md:px-6">
         <BlogHeader title={title} description={description} />
 
-        {/* Featured Blog */}
-        {featuredBlog && (
-          <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20">
-            <FeaturedBlogCard blog={featuredBlog} />
+        {featuredBlogs.length > 0 && (
+          <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
+            {featuredBlogs.map((blog) => (
+              <FeaturedBlogCard key={blog._id} blog={blog} />
+            ))}
           </div>
         )}
 
-        {/* Blog Grid */}
         {remainingBlogs.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 mt-8">
             {remainingBlogs.map((blog) => (
               <BlogCard key={blog._id} blog={blog} />
             ))}

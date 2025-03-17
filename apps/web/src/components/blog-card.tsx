@@ -68,7 +68,13 @@ function BlogMeta({ publishedAt }: { publishedAt: string | null }) {
   return (
     <div className="flex items-center gap-x-4 text-xs my-4">
       <time dateTime={publishedAt ?? ""} className="text-muted-foreground">
-        {publishedAt}
+        {publishedAt
+          ? new Date(publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })
+          : ""}
       </time>
     </div>
   );

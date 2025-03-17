@@ -136,7 +136,7 @@ async function createData() {
   console.log("\n");
 
   console.log("📚 Generating blog index page...");
-  const blogIndexPage = generateBlogIndexPage(blogPages);
+  const blogIndexPage = generateBlogIndexPage();
 
   transaction.createIfNotExists(blogIndexPage);
   console.log("✅ Created blog index page");

@@ -188,6 +188,8 @@ export const queryBlogIndexPageData = defineQuery(/* groq */ `
     _type,
     title,
     description,
+    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",
+    "featuredBlogsCount" : featuredBlogsCount,
     ${pageBuilderFragment},
     "slug": slug.current,
     "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){
