@@ -81,7 +81,7 @@ const AnchorT: FC<{ heading: any }> = ({ heading }) => {
         <Circle
           className={cn(
             "min-w-1.5 min-h-1.5 size-1.5 ",
-            !isChild && "fill-zinc-100",
+            !isChild && "dark:fill-zinc-100 fill-zinc-900",
           )}
           aria-hidden
         />
