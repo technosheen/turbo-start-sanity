@@ -1,10 +1,8 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Circle } from "lucide-react";
 import Link from "next/link";
 import { type FC, useMemo } from "react";
 import slugify from "slugify";
-
 import { cn } from "@workspace/ui/lib/utils";
-
 import type { PortableTextBlock } from "next-sanity";
 
 export type TableProps = {
@@ -74,13 +72,27 @@ const AnchorT: FC<{ heading: any }> = ({ heading }) => {
 
   return (
     <li
-      className={cn("list-inside list-disc my-2", [
+      className={cn("list-inside my-4", [
         headings[style as keyof typeof headings],
+        isChild ? "ml-1.5" : "",
       ])}
     >
-      <Link href={href ?? "#"}>
-        <span className="hover:underline">{text}</span>
-      </Link>
+      <span className="flex items-center gap-2">
+        <Circle
+          className={cn(
+            "min-w-1.5 min-h-1.5 size-1.5 ",
+            !isChild && "fill-zinc-100",
+          )}
+          aria-hidden
+        />
+        <Link
+          href={href ?? "#"}
+          className=" hover:text-blue-500 hover:underline line-clamp-1"
+        >
+          {text}
+        </Link>
+      </span>
+
       {Array.isArray(children) && children.length > 0 && (
         <ul>
           {children.map((child, index) => (
@@ -108,16 +120,16 @@ export const TableOfContent: FC<TableProps> = ({ richText }) => {
   if (!showTableOfContent) return <></>;
 
   return (
-    <div className="sticky left-0 top-8 flex flex-col">
-      <details className="group mb-4 rounded-xl bg-zinc-100 dark:bg-zinc-800 p-8">
-        <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold">
+    <div className="sticky top-8 flex flex-col w-full max-w-xs p-4 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900 shadow-sm rounded-lg border border-zinc-300 dark:border-zinc-700">
+      <details className="group">
+        <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-zinc-800 dark:text-zinc-200">
           <span>Table of Contents</span>
           <ChevronDown
             className="h-5 w-5 transform transition-transform duration-200 group-open:rotate-180"
             aria-hidden="true"
           />
         </summary>
-        <nav className="mt-4" aria-label="Table of contents">
+        <nav className="mt-4 ml-3" aria-label="Table of contents">
           <ul className="text-sm">
             {Array.isArray(headings) &&
               headings.map((heading, index) => (
