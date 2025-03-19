@@ -27,7 +27,7 @@ import { Menu } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import type { QueryNavbarDataResult } from "@/lib/sanity/sanity.types";
@@ -133,19 +133,19 @@ function MobileNavbar({ navbarData }: { navbarData: QueryNavbarDataResult }) {
         </SheetHeader>
 
         <div className="mb-8 mt-8 flex flex-col gap-4">
-          {columns?.map((column) => {
-            if (column.type === "link") {
+          {columns?.map((item) => {
+            if (item.type === "link") {
               return (
                 <Link
-                  key={`column-link-${column.name}-${column._key}`}
-                  href={column.href ?? ""}
+                  key={`column-link-${item.name}-${item._key}`}
+                  href={item.href ?? ""}
                   onClick={() => setIsOpen(false)}
                   className={cn(
                     buttonVariants({ variant: "ghost" }),
                     "justify-start",
                   )}
                 >
-                  {column.name}
+                  {item.name}
                 </Link>
               );
             }
@@ -154,10 +154,10 @@ function MobileNavbar({ navbarData }: { navbarData: QueryNavbarDataResult }) {
                 type="single"
                 collapsible
                 className="w-full"
-                key={column._key}
+                key={item._key}
               >
                 <MobileNavbarAccordionColumn
-                  column={column}
+                  column={item}
                   setIsOpen={setIsOpen}
                 />
               </Accordion>
@@ -180,9 +180,11 @@ function MobileNavbar({ navbarData }: { navbarData: QueryNavbarDataResult }) {
 function NavbarColumnLink({
   column,
 }: {
-  column: NonNullable<NonNullable<QueryNavbarDataResult>["columns"]>[number];
+  column: Extract<
+    NonNullable<NonNullable<QueryNavbarDataResult>["columns"]>[number],
+    { type: "link" }
+  >;
 }) {
-  if (column.type !== "link") return null;
   return (
     <Link
       aria-label={`Link to ${column.name ?? column.href}`}
@@ -202,22 +204,36 @@ function NavbarColumnLink({
   );
 }
 
-function NavbarColumn({
+function getColumnLayoutClass(itemCount: number) {
+  if (itemCount <= 4) return "w-80";
+  if (itemCount <= 8) return "grid grid-cols-2 gap-2 w-[500px]";
+  return "grid grid-cols-3 gap-2 w-[700px]";
+}
+
+export function NavbarColumn({
   column,
 }: {
-  column: NonNullable<NonNullable<QueryNavbarDataResult>["columns"]>[number];
+  column: Extract<
+    NonNullable<NonNullable<QueryNavbarDataResult>["columns"]>[number],
+    { type: "column" }
+  >;
 }) {
-  if (column.type !== "column") return null;
+  const layoutClass = useMemo(
+    () => getColumnLayoutClass(column.links?.length ?? 0),
+    [column.links?.length],
+  );
+
   return (
     <NavigationMenuList>
       <NavigationMenuItem className="text-muted-foreground dark:text-neutral-300">
         <NavigationMenuTrigger>{column.title}</NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="w-80 p-3">
+          <ul className={cn("p-3", layoutClass)}>
             {column.links?.map((item) => (
               <li key={item._key}>
                 <MenuItemLink
                   item={{
+                    title: item.name ?? "",
                     description: item.description ?? "",
                     href: item.href ?? "",
                     icon: (
@@ -226,7 +242,6 @@ function NavbarColumn({
                         className="size-5 shrink-0"
                       />
                     ),
-                    title: item.name ?? "",
                   }}
                 />
               </li>
