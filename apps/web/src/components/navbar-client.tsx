@@ -133,19 +133,19 @@ function MobileNavbar({ navbarData }: { navbarData: QueryNavbarDataResult }) {
         </SheetHeader>
 
         <div className="mb-8 mt-8 flex flex-col gap-4">
-          {columns?.map((column) => {
-            if (column.type === "link") {
+          {columns?.map((item) => {
+            if (item.type === "link") {
               return (
                 <Link
-                  key={`column-link-${column.name}-${column._key}`}
-                  href={column.href ?? ""}
+                  key={`column-link-${item.name}-${item._key}`}
+                  href={item.href ?? ""}
                   onClick={() => setIsOpen(false)}
                   className={cn(
                     buttonVariants({ variant: "ghost" }),
                     "justify-start",
                   )}
                 >
-                  {column.name}
+                  {item.name}
                 </Link>
               );
             }
@@ -154,10 +154,10 @@ function MobileNavbar({ navbarData }: { navbarData: QueryNavbarDataResult }) {
                 type="single"
                 collapsible
                 className="w-full"
-                key={column._key}
+                key={item._key}
               >
                 <MobileNavbarAccordionColumn
-                  column={column}
+                  column={item}
                   setIsOpen={setIsOpen}
                 />
               </Accordion>
@@ -202,18 +202,33 @@ function NavbarColumnLink({
   );
 }
 
-function NavbarColumn({
+export function NavbarColumn({
   column,
 }: {
   column: NonNullable<NonNullable<QueryNavbarDataResult>["columns"]>[number];
 }) {
   if (column.type !== "column") return null;
+
+  const getColumnLayout = () => {
+    const itemCount = column.links?.length || 0;
+
+    if (itemCount <= 4) {
+      return { className: "w-80" };
+    } else if (itemCount <= 8) {
+      return { className: "grid grid-cols-2 gap-2 w-[500px]" };
+    } else {
+      return { className: "grid grid-cols-3 gap-2 w-[700px]" };
+    }
+  };
+
+  const { className } = getColumnLayout();
+
   return (
     <NavigationMenuList>
       <NavigationMenuItem className="text-muted-foreground dark:text-neutral-300">
         <NavigationMenuTrigger>{column.title}</NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="w-80 p-3">
+          <ul className={cn("p-3", className)}>
             {column.links?.map((item) => (
               <li key={item._key}>
                 <MenuItemLink
