@@ -1,9 +1,9 @@
+import { cn } from "@workspace/ui/lib/utils";
 import { ChevronDown, Circle } from "lucide-react";
 import Link from "next/link";
+import type { PortableTextBlock } from "next-sanity";
 import { type FC, useMemo } from "react";
 import slugify from "slugify";
-import { cn } from "@workspace/ui/lib/utils";
-import type { PortableTextBlock } from "next-sanity";
 
 export type TableProps = {
   richText?: PortableTextBlock[] | null;

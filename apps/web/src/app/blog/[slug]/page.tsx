@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { PortableTextBlock } from "next-sanity";
 
 import { RichText } from "@/components/richtext";
 import { SanityImage } from "@/components/sanity-image";
@@ -7,7 +8,6 @@ import { client } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogPaths, queryBlogSlugPageData } from "@/lib/sanity/query";
 import { getMetaData } from "@/lib/seo";
-import type { PortableTextBlock } from "next-sanity";
 
 async function fetchBlogSlugPageData(slug: string) {
   return await sanityFetch({
