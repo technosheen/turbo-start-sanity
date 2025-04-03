@@ -6,6 +6,10 @@ on:
       - ".github/workflows/deploy-sanity.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     name: Build and Deploy Sanity Studio
