@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import type { Maybe } from "@/types";
 import { capitalize } from "@/utils";
 
 import { getBaseUrl } from "../config";
@@ -7,13 +8,13 @@ import { client } from "./sanity/client";
 import { queryGlobalSeoSettings } from "./sanity/query";
 
 interface MetaDataInput {
-  _type?: string;
-  _id?: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  title?: string;
-  description?: string;
-  slug?: string | { current: string };
+  _type?: Maybe<string>;
+  _id?: Maybe<string>;
+  seoTitle?: Maybe<string>;
+  seoDescription?: Maybe<string>;
+  title?: Maybe<string>;
+  description?: Maybe<string>;
+  slug?: Maybe<string> | { current: Maybe<string> };
 }
 
 function getOgImage({ type, id }: { type?: string; id?: string } = {}): string {
@@ -24,7 +25,7 @@ function getOgImage({ type, id }: { type?: string; id?: string } = {}): string {
   return `${baseUrl}/api/og?${params.toString()}`;
 }
 
-export async function getMetaData(data: MetaDataInput): Promise<Metadata> {
+export async function getMetaData(data: MetaDataInput = {}): Promise<Metadata> {
   const { _type, seoDescription, seoTitle, slug, title, description, _id } =
     data ?? {};
 

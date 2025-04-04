@@ -34,8 +34,7 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const { data } = await fetchBlogSlugPageData(slug);
-  if (!data) return getMetaData({});
-  return getMetaData(data);
+  return await getMetaData(data ?? {});
 }
 
 export async function generateStaticParams() {
