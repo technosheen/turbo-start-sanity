@@ -99,6 +99,8 @@ Alternatively, you can manually deploy from your Studio directory (`/studio`) us
 npx sanity deploy
 ```
 
+**Note**: To use the live preview feature, your browser needs to enable third party cookies.
+
 #### 2. Deploy Next.js app to Vercel
 
 You have the freedom to deploy your Next.js app to your hosting provider of choice. With Vercel and GitHub being a popular choice, we'll cover the basics of that approach.
