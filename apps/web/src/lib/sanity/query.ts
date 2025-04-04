@@ -159,7 +159,7 @@ const pageBuilderFragment = /* groq */ `
 `;
 
 export const queryHomePageData =
-  defineQuery(/* groq */ `*[_type == "homePage" && _id == "homePage"][0]{
+  defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{
     ...,
     _id,
     _type,
@@ -169,7 +169,7 @@ export const queryHomePageData =
     ${pageBuilderFragment}
   }`);
 
-export const querySlugPageData = defineQuery(/* groq */ `
+export const querySlugPageData = defineQuery(`
   *[_type == "page" && slug.current == $slug][0]{
     ...,
     "slug": slug.current,
@@ -177,11 +177,11 @@ export const querySlugPageData = defineQuery(/* groq */ `
   }
   `);
 
-export const querySlugPagePaths = defineQuery(/* groq */ `
+export const querySlugPagePaths = defineQuery(`
   *[_type == "page" && defined(slug.current)].slug.current
 `);
 
-export const queryBlogIndexPageData = defineQuery(/* groq */ `
+export const queryBlogIndexPageData = defineQuery(`
   *[_type == "blogIndex"][0]{
     ...,
     _id,
@@ -198,7 +198,7 @@ export const queryBlogIndexPageData = defineQuery(/* groq */ `
   }
 `);
 
-export const queryBlogSlugPageData = defineQuery(/* groq */ `
+export const queryBlogSlugPageData = defineQuery(`
   *[_type == "blog" && slug.current == $slug][0]{
     ...,
     "slug": slug.current,
@@ -233,31 +233,31 @@ const ogFieldsFragment = /* groq */ `
   "date": coalesce(date, _createdAt)
 `;
 
-export const queryHomePageOGData = defineQuery(/* groq */ `
+export const queryHomePageOGData = defineQuery(`
   *[_type == "homePage" && _id == $id][0]{
     ${ogFieldsFragment}
   }
   `);
 
-export const querySlugPageOGData = defineQuery(/* groq */ `
+export const querySlugPageOGData = defineQuery(`
   *[_type == "page" && _id == $id][0]{
     ${ogFieldsFragment}
   }
 `);
 
-export const queryBlogPageOGData = defineQuery(/* groq */ `
+export const queryBlogPageOGData = defineQuery(`
   *[_type == "blog" && _id == $id][0]{
     ${ogFieldsFragment}
   }
 `);
 
-export const queryGenericPageOGData = defineQuery(/* groq */ `
+export const queryGenericPageOGData = defineQuery(`
   *[ defined(slug.current) && _id == $id][0]{
     ${ogFieldsFragment}
   }
 `);
 
-export const queryFooterData = defineQuery(/* groq */ `
+export const queryFooterData = defineQuery(`
   *[_type == "footer" && _id == "footer"][0]{
     _id,
     subtitle,
@@ -281,7 +281,7 @@ export const queryFooterData = defineQuery(/* groq */ `
   }
 `);
 
-export const queryNavbarData = defineQuery(/* groq */ `
+export const queryNavbarData = defineQuery(`
   *[_type == "navbar" && _id == "navbar"][0]{
     _id,
     columns[]{
@@ -320,7 +320,7 @@ export const queryNavbarData = defineQuery(/* groq */ `
   }
 `);
 
-export const querySitemapData = defineQuery(/* groq */ `{
+export const querySitemapData = defineQuery(`{
   "slugPages": *[_type == "page" && defined(slug.current)]{
     "slug": slug.current,
     "lastModified": _updatedAt
@@ -330,3 +330,19 @@ export const querySitemapData = defineQuery(/* groq */ `{
     "lastModified": _updatedAt
   }
 }`);
+
+export const queryGlobalSeoSettings = defineQuery(`
+  *[_type == "settings"][0]{
+    _id,
+    _type,
+    siteTitle,
+    siteDescription,
+    socialLinks{
+      linkedin,
+      facebook,
+      twitter,
+      instagram,
+      youtube
+    }
+  }
+`);
