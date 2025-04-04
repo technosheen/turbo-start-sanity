@@ -13,8 +13,7 @@ async function fetchBlogPosts() {
 
 export async function generateMetadata() {
   const result = await sanityFetch({ query: queryBlogIndexPageData });
-  if (!result?.data) return getMetaData({});
-  return getMetaData(result.data);
+  return await getMetaData(result?.data ?? {});
 }
 
 export default async function BlogIndexPage() {

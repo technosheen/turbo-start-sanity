@@ -11,10 +11,7 @@ async function fetchHomePageData() {
 
 export async function generateMetadata() {
   const homePageData = await fetchHomePageData();
-  if (!homePageData.data) {
-    return getMetaData({});
-  }
-  return getMetaData(homePageData.data);
+  return await getMetaData(homePageData?.data ?? {});
 }
 
 export default async function Page() {
