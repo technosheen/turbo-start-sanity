@@ -4,9 +4,11 @@ import { defineQuery } from "next-sanity";
 const imageFragment = /* groq */ `
   image{
     ...,
-    "alt": coalesce(asset->altText, asset->originalFilename, "Image-Broken"),
-    "blurData": asset->metadata.lqip,
-    "dominantColor": asset->metadata.palette.dominant.background,
+    ...asset->{
+      "alt": coalesce(altText, originalFilename, "no-alt"),
+      "blurData": metadata.lqip,
+      "dominantColor": metadata.palette.dominant.background
+    },
   }
 `;
 
