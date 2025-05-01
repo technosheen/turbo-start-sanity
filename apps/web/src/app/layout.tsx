@@ -43,19 +43,18 @@ export default async function RootLayout({
           <Suspense fallback={<NavbarSkeleton />}>
             <NavbarServer />
           </Suspense>
-          {(await draftMode()).isEnabled ? (
-            <>
-              {children}
-              <VisualEditing />
-              <PreviewBar />
-            </>
-          ) : (
-            children
-          )}
+          {children}
+
           <Suspense fallback={<FooterSkeleton />}>
             <FooterServer />
           </Suspense>
           <SanityLive />
+          {(await draftMode()).isEnabled && (
+            <>
+              <PreviewBar />
+              <VisualEditing />
+            </>
+          )}
         </Providers>
       </body>
     </html>

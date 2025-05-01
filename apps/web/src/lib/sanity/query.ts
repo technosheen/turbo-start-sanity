@@ -343,12 +343,19 @@ export const querySitemapData = defineQuery(`{
     "lastModified": _updatedAt
   }
 }`);
-
 export const queryGlobalSeoSettings = defineQuery(`
   *[_type == "settings"][0]{
     _id,
     _type,
     siteTitle,
+    logo{
+      ...,
+      ...asset->{
+        "alt": coalesce(altText, originalFilename, "no-alt"),
+        "blurData": metadata.lqip,
+        "dominantColor": metadata.palette.dominant.background
+      }
+    },
     siteDescription,
     socialLinks{
       linkedin,

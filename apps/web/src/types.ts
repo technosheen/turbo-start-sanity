@@ -16,10 +16,11 @@ export type SanityButtonProps = NonNullable<
   NonNullable<PagebuilderType<"hero">>["buttons"]
 >[number];
 
-export type SanityImageProps = Extract<
-  NonNullable<QueryImageTypeResult>,
-  { alt: string; blurData: string | null; dominantColor: string | null }
->;
+// export type SanityImageProps = Extract<
+//   NonNullable<QueryImageTypeResult>,
+//   { alt: string; blurData: string | null; dominantColor: string | null }
+// >;
+export type SanityImageProps = NonNullable<QueryImageTypeResult>;
 
 export type SanityRichTextProps = NonNullable<
   NonNullable<PagebuilderType<"hero">>["richText"]
