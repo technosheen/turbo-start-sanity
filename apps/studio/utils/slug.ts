@@ -36,7 +36,7 @@ export async function isUnique(
   context: SlugValidationContext,
 ): Promise<boolean> {
   const { document, getClient } = context;
-  const client = getClient({ apiVersion: "2023-06-21" });
+  const client = getClient({ apiVersion: "2025-02-10" });
   const id = getPublishedId(document?._id ?? "");
   const draftId = getDraftId(id);
   const params = {
