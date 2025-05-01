@@ -160,6 +160,17 @@ const pageBuilderFragment = /* groq */ `
   }
 `;
 
+/**
+ * Query to extract a single image from a page document
+ * This is used as a type reference only and not for actual data fetching
+ * Helps with TypeScript inference for image objects
+ */
+export const queryImageType = defineQuery(`
+  *[_type == "page" && defined(image)][0]{
+    ${imageFragment}
+  }.image
+`);
+
 export const queryHomePageData =
   defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{
     ...,
