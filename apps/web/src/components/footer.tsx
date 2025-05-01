@@ -1,8 +1,11 @@
 import Link from "next/link";
 
 import { sanityFetch } from "@/lib/sanity/live";
-import { queryFooterData } from "@/lib/sanity/query";
-import type { QueryFooterDataResult } from "@/lib/sanity/sanity.types";
+import { queryFooterData, queryGlobalSeoSettings } from "@/lib/sanity/query";
+import type {
+  QueryFooterDataResult,
+  QueryGlobalSeoSettingsResult,
+} from "@/lib/sanity/sanity.types";
 
 import { Logo } from "./logo";
 import {
@@ -14,24 +17,26 @@ import {
 } from "./social-icons";
 
 interface SocialLinksProps {
-  data: NonNullable<QueryFooterDataResult>["socialLinks"];
+  data: NonNullable<QueryGlobalSeoSettingsResult>["socialLinks"];
 }
 
 interface FooterProps {
   data: NonNullable<QueryFooterDataResult>;
-}
-
-async function fetchFooterData() {
-  const response = await sanityFetch({
-    query: queryFooterData,
-  });
-  return response;
+  settingsData: NonNullable<QueryGlobalSeoSettingsResult>;
 }
 
 export async function FooterServer() {
-  const footerData = await fetchFooterData();
-  if (!footerData?.data) return <FooterSkeleton />;
-  return <Footer data={footerData.data} />;
+  const [response, settingsResponse] = await Promise.all([
+    sanityFetch({
+      query: queryFooterData,
+    }),
+    sanityFetch({
+      query: queryGlobalSeoSettings,
+    }),
+  ]);
+
+  if (!response?.data || !settingsResponse?.data) return <FooterSkeleton />;
+  return <Footer data={response.data} settingsData={settingsResponse.data} />;
 }
 
 function SocialLinks({ data }: SocialLinksProps) {
@@ -129,8 +134,9 @@ export function FooterSkeleton() {
   );
 }
 
-function Footer({ data }: FooterProps) {
-  const { subtitle, columns, socialLinks, logo, siteTitle } = data;
+function Footer({ data, settingsData }: FooterProps) {
+  const { subtitle, columns } = data;
+  const { siteTitle, logo, socialLinks } = settingsData;
   const year = new Date().getFullYear();
 
   return (
@@ -141,7 +147,7 @@ function Footer({ data }: FooterProps) {
             <div className="flex w-full max-w-96 shrink flex-col items-center justify-between gap-6 md:gap-8 lg:items-start">
               <div>
                 <span className="flex items-center justify-center gap-4 lg:justify-start">
-                  <Logo src={logo} alt={siteTitle} priority />
+                  <Logo image={logo} alt={siteTitle} priority />
                 </span>
                 {subtitle && (
                   <p className="mt-6 text-sm text-muted-foreground dark:text-zinc-400">

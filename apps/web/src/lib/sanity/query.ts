@@ -287,10 +287,7 @@ export const queryFooterData = defineQuery(`
           url.href
         ),
       }
-    },
-    "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max",
-    "siteTitle": *[_type == "settings"][0].siteTitle,
-    "socialLinks": *[_type == "settings"][0].socialLinks,
+    }
   }
 `);
 
@@ -328,8 +325,6 @@ export const queryNavbarData = defineQuery(`
       }
     },
     ${buttonsFragment},
-    "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max",
-    "siteTitle": *[_type == "settings"][0].siteTitle,
   }
 `);
 

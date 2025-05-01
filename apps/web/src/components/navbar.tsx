@@ -9,8 +9,10 @@ import { Logo } from "./logo";
 import { NavbarClient, NavbarSkeletonResponsive } from "./navbar-client";
 
 export async function NavbarServer() {
-  const navbarData = await sanityFetch({ query: queryNavbarData });
-  const settingsData = await sanityFetch({ query: queryGlobalSeoSettings });
+  const [navbarData, settingsData] = await Promise.all([
+    sanityFetch({ query: queryNavbarData }),
+    sanityFetch({ query: queryGlobalSeoSettings }),
+  ]);
   return (
     <Navbar navbarData={navbarData.data} settingsData={settingsData.data} />
   );
@@ -24,8 +26,6 @@ export function Navbar({
   settingsData: QueryGlobalSeoSettingsResult;
 }) {
   const { siteTitle: settingsSiteTitle, logo } = settingsData ?? {};
-  // const { logo } = navbarData ?? {};
-  console.log("🚀 ~ logo:", settingsData);
   return (
     <section className="py-3 md:border-b">
       <div className="container mx-auto px-4 md:px-6">
