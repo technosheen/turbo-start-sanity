@@ -1,6 +1,10 @@
-import { isPortableTextTextBlock, type StringOptions } from "sanity";
+import {
+  isPortableTextTextBlock,
+  type SanityDocument,
+  type StringOptions,
+} from "sanity";
 
-import type { DocumentWithLocale, Page, Tree, TreeNode } from "./types";
+import type { Page, Tree, TreeNode } from "./types";
 
 export const isRelativeUrl = (url: string) =>
   url.startsWith("/") || url.startsWith("#") || url.startsWith("?");
@@ -245,7 +249,7 @@ export const getTemplateName = (template: string) => {
   return `${template}-with-slug`;
 };
 
-export const getDocumentPath = (document: DocumentWithLocale) => {
+export const getDocumentPath = (document: SanityDocument) => {
   if (typeof document.slug !== "string") return;
   return formatPath(document.slug);
 };
